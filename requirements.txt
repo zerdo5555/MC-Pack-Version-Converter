@@ -1,0 +1,15 @@
+# Minecraft Pack Version Converter - Requirements
+# Python 3.8+ required
+
+# GUI Framework (built-in with Python)
+# tkinter - included with Python standard library
+
+# Optional dependencies for enhanced functionality
+Pillow>=8.0.0          # Image processing for custom button images (optional)
+toml>=0.10.2           # TOML parsing for Forge mods (fallback, uses regex by default)
+
+# Development dependencies (uncomment if contributing)
+# pyinstaller>=4.10     # For building executable
+# pytest>=6.0.0         # For testing
+# black>=21.0.0         # Code formatting
+# flake8>=3.9.0         # Code linting
