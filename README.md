@@ -3,8 +3,6 @@
 
 A simple and intuitive GUI tool for updating Minecraft resource packs, data packs, and mods between different Minecraft versions (1.16 - 1.21.8).
 
-![MC-Pack Version Converter](assets/screenshot1.png)
-
 ## ✨ Features
 
 - 🎯 **Simple GUI Interface** - Clean, user-friendly design
@@ -28,7 +26,7 @@ A simple and intuitive GUI tool for updating Minecraft resource packs, data pack
 - Preserves custom namespaces
 
 ### Mods (.jar)
-- **Forge Mods** - Updates `mods.toml`
+- **Forge Mods** - Updates `META-INF/mods.toml`
 - **Fabric Mods** - Updates `fabric.mod.json`
 - **Quilt Mods** - Updates `quilt.mod.json`
 
@@ -54,54 +52,37 @@ A simple and intuitive GUI tool for updating Minecraft resource packs, data pack
 | 1.21.6 | 63 | ✅ Supported |
 | 1.21.7 - 1.21.8 | 64 | ✅ Supported |
 
-## 📥 Installation
+## 📥 Installation & Usage
 
-### Option 1: Download Executable (Recommended)
-1. Go to [Releases](../../releases)
-2. Download `minecraft_pack_updater.exe`
-3. Run the executable - no installation required!
+### Download and Run
+1. Go to the [latest release](../../releases/latest)
+2. Download `MC-Pack-Version-Converter-v1.0.zip`
+3. Unzip the downloaded file
+4. Run `minecraft_pack_updater.py` (Python is required)
 
-### Option 2: Run from Source
+⚠️ **Important Note**: If you download and run anything other than `MC-Pack-Version-Converter-v1.0.zip`, the "Convert" button may disappear due to a malfunction. Please make sure to download `MC-Pack-Version-Converter-v1.0.zip`.
+
+### Run from Source (Alternative)
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/minecraft-pack-updater.git
-cd minecraft-pack-updater
+git clone https://github.com/zerdo5555/MC-Pack-Version-Converter.git
+cd MC-Pack-Version-Converter
 
-# Install dependencies
+# Install dependencies (optional)
 pip install -r requirements.txt
 
 # Run the application
 python minecraft_pack_updater.py
 ```
 
-## 🚀 Usage
-
-1. **Launch the Application**
-   - Run `minecraft_pack_updater.exe` or `python minecraft_pack_updater.py`
-
-2. **Select Pack Type**
-   - Choose from: Mod, Resource Pack, or Data Pack
-
-3. **Set Versions**
+### How to Use
+1. **Select Pack Type** - Choose from: Mod, Resource Pack, or Data Pack
+2. **Set Versions**
    - **Pack Version**: Current version of your pack
    - **MC Version**: Target Minecraft version
-
-4. **Select Pack File**
-   - Click the "..." button to browse for your pack file
-   - Supports .jar (mods) and .zip (resource/data packs)
-
-5. **Convert**
-   - Click the green "Convert" button
-   - Wait for the process to complete
-   - Find your converted pack in the same folder with "_vX.XX.X" suffix
-
-## 📸 Screenshots
-
-### Main Interface
-![Main Interface](assets/screenshot1.png)
-
-### Conversion Process
-![Conversion Process](assets/screenshot2.png)
+3. **Select Pack File** - Click the "..." button to browse for your pack file (.jar for mods, .zip for resource/data packs)
+4. **Convert** - Press the "Convert" button to complete the process
+5. **Output** - The converted pack will be saved in the same folder as the original file with "_vX.XX.X" suffix
 
 ## ⚙️ How It Works
 
@@ -143,7 +124,27 @@ The converter updates the following files automatically:
 
 - 📋 [Open an Issue](../../issues/new) for bug reports
 - 💬 [Discussions](../../discussions) for questions
-- 📖 [Wiki](../../wiki) for detailed guides
+
+## 🔧 Technical Specifications
+
+### System Requirements
+- Python 3.8 or higher
+- tkinter (included with Python standard library)
+- Optional: Pillow (for image processing), toml (for TOML parsing)
+
+### File Structure
+```
+MC-Pack-Version-Converter/
+├── minecraft_pack_updater.py  # Main application
+├── requirements.txt           # Python dependencies
+├── setup.py                  # Setup script
+├── README.md                 # This file
+├── LICENSE                   # MIT License
+├── .gitignore               # Git ignore settings
+├── docs/                    # Documentation
+├── examples/                # Sample files
+└── tests/                   # Test files
+```
 
 ## 🤝 Contributing
 
@@ -156,22 +157,12 @@ Contributions are welcome! Here's how you can help:
 5. 📤 Submit a pull request
 
 ### Development Setup
-
 ```bash
-git clone https://github.com/YOUR_USERNAME/minecraft-pack-updater.git
-cd minecraft-pack-updater
+git clone https://github.com/zerdo5555/MC-Pack-Version-Converter.git
+cd MC-Pack-Version-Converter
 pip install -r requirements.txt
 python minecraft_pack_updater.py
 ```
-
-## 📝 Changelog
-
-### v1.0.0 (2025-01-XX)
-- ✨ Initial release
-- 🎯 Support for Minecraft 1.16 - 1.21.8
-- 🛠️ Resource Pack, Data Pack, and Mod conversion
-- 🖥️ Clean GUI interface
-- 🔄 Automatic metadata updates
 
 ## 📄 License
 
@@ -183,15 +174,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 🔧 Forge, Fabric, and Quilt communities
 - 🎨 All the texture pack and mod creators
 - 👥 Contributors and users of this tool
-
-## ⭐ Support
-
-If this tool helped you, consider:
-- ⭐ Starring this repository
-- 🐛 Reporting bugs and suggesting features
-- 📢 Sharing with other Minecraft modders/pack creators
-- ☕ [Buy me a coffee](https://ko-fi.com/your-username) (optional)
-
----
-
-**Made with ❤️ for the Minecraft community**
