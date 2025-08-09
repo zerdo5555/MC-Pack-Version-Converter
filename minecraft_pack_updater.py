@@ -12,8 +12,8 @@ class MinecraftPackUpdater:
     def __init__(self, root):
         self.root = root
         self.root.title("MC-Pack Version Converter")
-        self.root.geometry("650x500")
-        self.root.configure(bg="#2C2C2C")
+        self.root.geometry("600x650")  # さらに高さを増やした
+        self.root.configure(bg="#F5F5F5")
         self.root.resizable(False, False)
         
         # パック形式の対応表（バージョン -> pack_format）
@@ -38,133 +38,105 @@ class MinecraftPackUpdater:
     
     def setup_ui(self):
         # メインフレーム
-        main_frame = tk.Frame(self.root, bg="#2C2C2C")
-        main_frame.pack(expand=True, fill="both", padx=30, pady=20)
+        main_frame = tk.Frame(self.root, bg="#F5F5F5")
+        main_frame.pack(expand=True, fill="both", padx=40, pady=20)  # paddingを少し減らした
         
         # タイトル
         title_label = tk.Label(main_frame, text="MC-Pack Version Converter", 
-                              font=("Arial", 26, "bold"), fg="#FFFFFF", bg="#2C2C2C")
-        title_label.pack(pady=(0, 30))
-        
-        # 入力セクション
-        input_frame = tk.Frame(main_frame, bg="#2C2C2C")
-        input_frame.pack(fill="x", pady=(0, 20))
+                              font=("Arial", 24, "normal"), fg="#333333", bg="#F5F5F5")
+        title_label.pack(pady=(0, 30))  # タイトル下のスペースを少し減らした
         
         # Pack Type
-        self.create_input_row(input_frame, "Pack Type", self.pack_type, 
+        self.create_input_row(main_frame, "Pack Type", self.pack_type, 
                              ["Mod", "Resource Pack", "Data Pack"], 0)
         
-        # Pack Version (元のバージョン)
-        self.create_input_row(input_frame, "From Version", self.pack_version,
+        # Pack Version
+        self.create_input_row(main_frame, "Pack Version", self.pack_version,
                              list(self.pack_formats.keys()), 1)
         
-        # MC Version (変換先バージョン)
-        self.create_input_row(input_frame, "To Version", self.mc_version,
+        # MC Version
+        self.create_input_row(main_frame, "MC Version", self.mc_version,
                              list(self.pack_formats.keys()), 2)
         
         # Pack File
-        self.create_file_row(input_frame, "Pack File", self.pack_file_path, 3)
+        self.create_file_row(main_frame, "Pack File", self.pack_file_path, 3)
         
-        # ボタンフレーム
-        button_frame = tk.Frame(main_frame, bg="#2C2C2C")
-        button_frame.pack(pady=(30, 0))
-        
-        # Convert Button - シンプルで確実に表示される
-        self.convert_button = tk.Button(button_frame, text="Convert",
+        # Convert Button - 元のコードのボタンを修正
+        self.convert_button = tk.Button(main_frame, text="Convert",
                                        command=self.convert_pack, 
-                                       font=("Arial", 14, "bold"),
-                                       bg="#4CAF50", fg="white", 
-                                       relief="raised", cursor="hand2",
-                                       width=25, height=2,
-                                       activebackground="#45a049")
-        self.convert_button.pack(pady=(10, 15))
-        
-        # Clear Button
-        self.clear_button = tk.Button(button_frame, text="Clear",
-                                     command=self.clear_fields,
-                                     font=("Arial", 12, "normal"),
-                                     bg="#FF6B6B", fg="white",
-                                     relief="raised", cursor="hand2",
-                                     width=15, height=1,
-                                     activebackground="#FF5252")
-        self.clear_button.pack(pady=(0, 10))
+                                       font=("Arial", 18, "normal"),
+                                       bg="#90EE90", fg="#333333", 
+                                       relief="flat", cursor="hand2",
+                                       width=15, height=2,
+                                       activebackground="#7FDD7F")
+        self.convert_button.pack(pady=(30, 10))
         
         # Status Label
-        self.status_label = tk.Label(main_frame, text="Ready to convert", 
-                                    font=("Arial", 11), fg="#A0A0A0", bg="#2C2C2C")
-        self.status_label.pack(pady=(20, 0))
-        
-        # Progress Bar (非表示状態で作成)
-        self.progress_var = tk.DoubleVar()
-        self.progress_bar = ttk.Progressbar(main_frame, variable=self.progress_var,
-                                           maximum=100, length=400, mode='determinate')
-        # 最初は非表示
-        
+        self.status_label = tk.Label(main_frame, text="", 
+                                    font=("Arial", 10), fg="#666666", bg="#F5F5F5")
+        self.status_label.pack(pady=(10, 0))
+    
     def create_input_row(self, parent, label_text, variable, values, row):
         """入力行を作成"""
-        row_frame = tk.Frame(parent, bg="#2C2C2C")
-        row_frame.pack(fill="x", pady=(0, 15))
+        row_frame = tk.Frame(parent, bg="#F5F5F5")
+        row_frame.pack(fill="x", pady=(0, 20))
         
         # Label
         label = tk.Label(row_frame, text=label_text, 
-                        font=("Arial", 12, "bold"), fg="#FFFFFF", bg="#404040",
-                        width=15, height=2, relief="flat")
-        label.pack(side="left", padx=(0, 10))
+                        font=("Arial", 14, "normal"), fg="#333333", bg="#D3D3D3",
+                        width=12, height=2, relief="flat")
+        label.pack(side="left")
         
-        # Combobox with dark theme
-        style = ttk.Style()
-        style.theme_use('clam')
-        style.configure("Dark.TCombobox",
-                       fieldbackground="#505050",
-                       background="#505050",
-                       foreground="#FFFFFF",
-                       borderwidth=1,
-                       relief="flat",
-                       selectbackground="#4CAF50",
-                       selectforeground="#FFFFFF")
+        # Combobox
+        combo_style = ttk.Style()
+        combo_style.configure("Custom.TCombobox",
+                             fieldbackground="#D3D3D3",
+                             background="#D3D3D3",
+                             borderwidth=1,
+                             relief="flat")
         
         combo = ttk.Combobox(row_frame, textvariable=variable, values=values,
-                            state="readonly", font=("Arial", 11),
-                            style="Dark.TCombobox", width=25)
-        combo.pack(side="right", fill="x", expand=True)
+                            state="readonly", font=("Arial", 12),
+                            style="Custom.TCombobox", width=25)
+        combo.pack(side="right", fill="x", expand=True, padx=(10, 0))
         
         return combo
     
     def create_file_row(self, parent, label_text, variable, row):
         """ファイル選択行を作成"""
-        row_frame = tk.Frame(parent, bg="#2C2C2C")
-        row_frame.pack(fill="x", pady=(0, 15))
+        row_frame = tk.Frame(parent, bg="#F5F5F5")
+        row_frame.pack(fill="x", pady=(0, 20))
         
         # Label
         label = tk.Label(row_frame, text=label_text, 
-                        font=("Arial", 12, "bold"), fg="#FFFFFF", bg="#404040",
-                        width=15, height=2, relief="flat")
-        label.pack(side="left", padx=(0, 10))
+                        font=("Arial", 14, "normal"), fg="#333333", bg="#D3D3D3",
+                        width=12, height=2, relief="flat")
+        label.pack(side="left")
         
         # File path display + browse button frame
-        file_frame = tk.Frame(row_frame, bg="#2C2C2C")
-        file_frame.pack(side="right", fill="x", expand=True)
+        file_frame = tk.Frame(row_frame, bg="#F5F5F5")
+        file_frame.pack(side="right", fill="x", expand=True, padx=(10, 0))
         
         # File path entry
         self.file_entry = tk.Entry(file_frame, textvariable=variable,
-                                  font=("Arial", 10), bg="#505050", fg="#FFFFFF",
-                                  relief="flat", bd=1, insertbackground="white")
+                                  font=("Arial", 10), bg="#D3D3D3", fg="#333333",
+                                  relief="flat", bd=1)
         self.file_entry.pack(side="left", fill="x", expand=True)
         
         # Browse button
-        browse_btn = tk.Button(file_frame, text="📁 Browse", 
+        browse_btn = tk.Button(file_frame, text="...", 
                               command=self.browse_file,
-                              font=("Arial", 10, "bold"), bg="#2196F3", fg="white",
-                              relief="flat", cursor="hand2",
-                              activebackground="#1976D2", bd=0)
-        browse_btn.pack(side="right", padx=(8, 0))
+                              font=("Arial", 12, "bold"), bg="#D3D3D3", fg="#333333",
+                              relief="flat", width=3, cursor="hand2",
+                              activebackground="#C0C0C0")
+        browse_btn.pack(side="right", padx=(5, 0))
     
     def browse_file(self):
         """ファイル参照ダイアログ"""
         if self.pack_type.get() == "Mod":
-            filetypes = [("JAR files", "*.jar"), ("ZIP files", "*.zip"), ("All files", "*.*")]
+            filetypes = [("JAR files", "*.jar"), ("All files", "*.*")]
         else:
-            filetypes = [("ZIP files", "*.zip"), ("JAR files", "*.jar"), ("All files", "*.*")]
+            filetypes = [("ZIP files", "*.zip"), ("All files", "*.*")]
         
         file_path = filedialog.askopenfilename(
             title="Select Pack File",
@@ -174,70 +146,32 @@ class MinecraftPackUpdater:
         if file_path:
             self.selected_file = file_path
             self.pack_file_path.set(file_path)
-            self.update_status("✅ File selected successfully", "#4CAF50")
+            self.update_status("File selected", "#28a745")
     
-    def clear_fields(self):
-        """フィールドをクリア"""
-        self.selected_file = None
-        self.pack_file_path.set("")
-        self.pack_type.set("Mod")
-        self.pack_version.set("1.18.2")
-        self.mc_version.set("1.21.8")
-        self.update_status("Fields cleared", "#FFA726")
-        # プログレスバーが表示されている場合は隠す
-        self.progress_bar.pack_forget()
-    
-    def update_status(self, message, color="#A0A0A0"):
+    def update_status(self, message, color="#666666"):
         """ステータス更新"""
         self.status_label.config(text=message, fg=color)
         self.root.update()
     
-    def show_progress(self, show=True):
-        """プログレスバーの表示/非表示"""
-        if show:
-            self.progress_bar.pack(pady=(10, 0))
-            self.progress_var.set(0)
-        else:
-            self.progress_bar.pack_forget()
-    
     def convert_pack(self):
         """パック変換メイン処理"""
-        # 入力検証
         if not self.selected_file:
-            messagebox.showerror("Error", "Please select a pack file first!")
-            self.update_status("❌ No file selected", "#F44336")
-            return
-        
-        if not os.path.exists(self.selected_file):
-            messagebox.showerror("Error", "Selected file does not exist!")
-            self.update_status("❌ File not found", "#F44336")
+            messagebox.showerror("Error", "Please select a pack file")
             return
         
         if self.pack_version.get() == self.mc_version.get():
-            messagebox.showwarning("Warning", "Source and target versions are the same!")
-            self.update_status("⚠️ Same version selected", "#FF9800")
+            messagebox.showwarning("Warning", "Source and target versions are the same")
             return
         
         try:
-            # UI更新
-            self.convert_button.config(state="disabled", text="Converting...", bg="#9E9E9E")
-            self.clear_button.config(state="disabled")
-            self.show_progress(True)
-            self.update_status("🔄 Converting pack...", "#2196F3")
-            
-            # プログレス更新
-            self.progress_var.set(20)
-            self.root.update()
+            self.convert_button.config(state="disabled", text="Converting...")
+            self.update_status("Converting pack...", "#007bff")
             
             # 出力ファイル名生成
             input_path = Path(self.selected_file)
             output_filename = f"{input_path.stem}_v{self.mc_version.get()}{input_path.suffix}"
             output_path = input_path.parent / output_filename
             
-            self.progress_var.set(40)
-            self.root.update()
-            
-            # パックタイプに応じて変換
             if self.pack_type.get() == "Resource Pack":
                 self.convert_resource_pack(output_path)
             elif self.pack_type.get() == "Data Pack":
@@ -245,46 +179,25 @@ class MinecraftPackUpdater:
             else:
                 self.convert_mod(output_path)
             
-            self.progress_var.set(100)
-            self.root.update()
-            
-            # 成功メッセージ
-            self.update_status("✅ Conversion completed successfully!", "#4CAF50")
-            messagebox.showinfo("Success", 
-                               f"Pack converted successfully!\n\n"
-                               f"From: {self.pack_version.get()}\n"
-                               f"To: {self.mc_version.get()}\n"
-                               f"Output: {output_path.name}")
+            self.update_status("Conversion completed successfully!", "#28a745")
+            messagebox.showinfo("Success", f"Pack converted successfully!\nOutput: {output_path.name}")
             
         except Exception as e:
-            self.progress_var.set(0)
-            self.update_status("❌ Conversion failed", "#F44336")
-            messagebox.showerror("Error", f"Conversion failed:\n\n{str(e)}")
+            self.update_status("Conversion failed", "#dc3545")
+            messagebox.showerror("Error", f"Conversion failed:\n{str(e)}")
         
         finally:
-            # UI復元
-            self.convert_button.config(state="normal", text="Convert", bg="#4CAF50")
-            self.clear_button.config(state="normal")
-            self.show_progress(False)
+            self.convert_button.config(state="normal", text="Convert")
     
     def convert_resource_pack(self, output_path):
         """リソースパック変換"""
         with tempfile.TemporaryDirectory() as temp_dir:
-            self.progress_var.set(50)
-            self.root.update()
-            
             # ZIPを展開
             with zipfile.ZipFile(self.selected_file, 'r') as zip_ref:
                 zip_ref.extractall(temp_dir)
             
-            self.progress_var.set(70)
-            self.root.update()
-            
             # pack.mcmeta更新
             self.update_pack_mcmeta(temp_dir)
-            
-            self.progress_var.set(90)
-            self.root.update()
             
             # 新しいZIPファイル作成
             self.create_zip_archive(temp_dir, output_path)
@@ -292,34 +205,19 @@ class MinecraftPackUpdater:
     def convert_data_pack(self, output_path):
         """データパック変換"""
         with tempfile.TemporaryDirectory() as temp_dir:
-            self.progress_var.set(50)
-            self.root.update()
-            
             with zipfile.ZipFile(self.selected_file, 'r') as zip_ref:
                 zip_ref.extractall(temp_dir)
             
-            self.progress_var.set(70)
-            self.root.update()
-            
             # pack.mcmeta更新（データパック用）
             self.update_pack_mcmeta(temp_dir, is_datapack=True)
-            
-            self.progress_var.set(90)
-            self.root.update()
             
             self.create_zip_archive(temp_dir, output_path)
     
     def convert_mod(self, output_path):
         """MOD変換"""
         with tempfile.TemporaryDirectory() as temp_dir:
-            self.progress_var.set(50)
-            self.root.update()
-            
             with zipfile.ZipFile(self.selected_file, 'r') as zip_ref:
                 zip_ref.extractall(temp_dir)
-            
-            self.progress_var.set(60)
-            self.root.update()
             
             # Forge MOD処理
             if os.path.exists(os.path.join(temp_dir, "META-INF", "mods.toml")):
@@ -332,9 +230,6 @@ class MinecraftPackUpdater:
             # Quilt MOD処理
             if os.path.exists(os.path.join(temp_dir, "quilt.mod.json")):
                 self.update_quilt_mod(temp_dir)
-            
-            self.progress_var.set(90)
-            self.root.update()
             
             self.create_zip_archive(temp_dir, output_path)
     
@@ -404,7 +299,7 @@ class MinecraftPackUpdater:
                 f.write(content)
                 
         except Exception as e:
-            self.update_status(f"⚠️ Warning: Could not update Forge mod file: {str(e)}", "#FF9800")
+            self.update_status(f"Warning: Could not update Forge mod file: {str(e)}", "#ffc107")
     
     def update_fabric_mod(self, temp_dir):
         """Fabric MOD更新"""
@@ -423,7 +318,7 @@ class MinecraftPackUpdater:
                 json.dump(fabric_data, f, indent=2, ensure_ascii=False)
                 
         except Exception as e:
-            self.update_status(f"⚠️ Warning: Could not update Fabric mod file: {str(e)}", "#FF9800")
+            self.update_status(f"Warning: Could not update Fabric mod file: {str(e)}", "#ffc107")
     
     def update_quilt_mod(self, temp_dir):
         """Quilt MOD更新"""
@@ -442,7 +337,7 @@ class MinecraftPackUpdater:
                 json.dump(quilt_data, f, indent=2, ensure_ascii=False)
                 
         except Exception as e:
-            self.update_status(f"⚠️ Warning: Could not update Quilt mod file: {str(e)}", "#FF9800")
+            self.update_status(f"Warning: Could not update Quilt mod file: {str(e)}", "#ffc107")
     
     def create_zip_archive(self, temp_dir, output_path):
         """ZIPアーカイブ作成"""
